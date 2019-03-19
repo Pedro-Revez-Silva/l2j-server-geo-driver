@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2015 L2J Server
+ * Copyright © 2019 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,21 +21,18 @@ package com.l2jserver.geodriver;
 /**
  * @author HorridoJoho
  */
-public interface IRegion
+public interface IBlock
 {
-	/** Blocks in a region on the x axis */
-	public static final int REGION_BLOCKS_X = 256;
-	/** Blocks in a region on the y axis */
-	public static final int REGION_BLOCKS_Y = 256;
-	/** Blocks in a region */
-	public static final int REGION_BLOCKS = REGION_BLOCKS_X * REGION_BLOCKS_Y;
+	public static final int TYPE_FLAT = 0;
+	public static final int TYPE_COMPLEX = 1;
+	public static final int TYPE_MULTILAYER = 2;
 	
-	/** Cells in a region on the x axis */
-	public static final int REGION_CELLS_X = REGION_BLOCKS_X * IBlock.BLOCK_CELLS_X;
-	/** Cells in a regioin on the y axis */
-	public static final int REGION_CELLS_Y = REGION_BLOCKS_Y * IBlock.BLOCK_CELLS_Y;
-	/** Cells in a region */
-	public static final int REGION_CELLS = REGION_CELLS_X * REGION_CELLS_Y;
+	/** Cells in a block on the x axis */
+	public static final int BLOCK_CELLS_X = 8;
+	/** Cells in a block on the y axis */
+	public static final int BLOCK_CELLS_Y = 8;
+	/** Cells in a block */
+	public static final int BLOCK_CELLS = BLOCK_CELLS_X * BLOCK_CELLS_Y;
 	
 	boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe);
 	
@@ -44,6 +41,4 @@ public interface IRegion
 	int getNextLowerZ(int geoX, int geoY, int worldZ);
 	
 	int getNextHigherZ(int geoX, int geoY, int worldZ);
-	
-	boolean hasGeo();
 }

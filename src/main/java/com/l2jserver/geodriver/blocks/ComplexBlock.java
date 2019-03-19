@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2015 L2J Server
+ * Copyright © 2019 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -25,57 +25,48 @@ import com.l2jserver.geodriver.IBlock;
 /**
  * @author HorridoJoho
  */
-public final class ComplexBlock implements IBlock
-{
+public final class ComplexBlock implements IBlock {
+	
 	private final short[] _data;
 	
-	public ComplexBlock(ByteBuffer bb)
-	{
+	public ComplexBlock(ByteBuffer bb) {
 		_data = new short[IBlock.BLOCK_CELLS];
-		for (int cellOffset = 0; cellOffset < IBlock.BLOCK_CELLS; cellOffset++)
-		{
+		for (int cellOffset = 0; cellOffset < IBlock.BLOCK_CELLS; cellOffset++) {
 			_data[cellOffset] = bb.getShort();
 		}
 	}
 	
-	private short _getCellData(int geoX, int geoY)
-	{
+	private short _getCellData(int geoX, int geoY) {
 		return _data[((geoX % IBlock.BLOCK_CELLS_X) * IBlock.BLOCK_CELLS_Y) + (geoY % IBlock.BLOCK_CELLS_Y)];
 	}
 	
-	private byte _getCellNSWE(int geoX, int geoY)
-	{
+	private byte _getCellNSWE(int geoX, int geoY) {
 		return (byte) (_getCellData(geoX, geoY) & 0x000F);
 	}
 	
-	private int _getCellHeight(int geoX, int geoY)
-	{
+	private int _getCellHeight(int geoX, int geoY) {
 		short height = (short) (_getCellData(geoX, geoY) & 0x0FFF0);
 		return height >> 1;
 	}
 	
 	@Override
-	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe)
-	{
+	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe) {
 		return (_getCellNSWE(geoX, geoY) & nswe) == nswe;
 	}
 	
 	@Override
-	public int getNearestZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNearestZ(int geoX, int geoY, int worldZ) {
 		return _getCellHeight(geoX, geoY);
 	}
 	
 	@Override
-	public int getNextLowerZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNextLowerZ(int geoX, int geoY, int worldZ) {
 		int cellHeight = _getCellHeight(geoX, geoY);
 		return cellHeight <= worldZ ? cellHeight : worldZ;
 	}
 	
 	@Override
-	public int getNextHigherZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNextHigherZ(int geoX, int geoY, int worldZ) {
 		int cellHeight = _getCellHeight(geoX, geoY);
 		return cellHeight >= worldZ ? cellHeight : worldZ;
 	}

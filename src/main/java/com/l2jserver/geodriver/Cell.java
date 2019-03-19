@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2015 L2J Server
+ * Copyright © 2019 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -21,8 +21,7 @@ package com.l2jserver.geodriver;
 /**
  * @author HorridoJoho
  */
-public final class Cell
-{
+public final class Cell {
 	/** East NSWE flag */
 	public static final byte NSWE_EAST = 1 << 0;
 	/** West NSWE flag */
@@ -44,7 +43,6 @@ public final class Cell
 	/** All directions NSWE flags */
 	public static final byte NSWE_ALL = NSWE_EAST | NSWE_WEST | NSWE_SOUTH | NSWE_NORTH;
 	
-	private Cell()
-	{
+	private Cell() {
 	}
 }

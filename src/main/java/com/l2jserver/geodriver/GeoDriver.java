@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2015 L2J Server
+ * Copyright © 2019 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -31,8 +31,8 @@ import com.l2jserver.geodriver.regions.Region;
 /**
  * @author HorridoJoho
  */
-public final class GeoDriver
-{
+public final class GeoDriver {
+	
 	// world dimensions: 1048576 * 1048576 = 1099511627776
 	private static final int WORLD_MIN_X = -655360;
 	private static final int WORLD_MAX_X = 393215;
@@ -61,103 +61,82 @@ public final class GeoDriver
 	/** The regions array */
 	private final AtomicReferenceArray<IRegion> _regions = new AtomicReferenceArray<>(GEO_REGIONS);
 	
-	public GeoDriver()
-	{
-		for (int i = 0; i < _regions.length(); i++)
-		{
+	public GeoDriver() {
+		for (int i = 0; i < _regions.length(); i++) {
 			_regions.set(i, NullRegion.INSTANCE);
 		}
 	}
 	
-	private void checkGeoX(int geoX)
-	{
-		if ((geoX < 0) || (geoX >= GEO_CELLS_X))
-		{
+	private void checkGeoX(int geoX) {
+		if ((geoX < 0) || (geoX >= GEO_CELLS_X)) {
 			throw new IllegalArgumentException();
 		}
 	}
 	
-	private void checkGeoY(int geoY)
-	{
-		if ((geoY < 0) || (geoY >= GEO_CELLS_Y))
-		{
+	private void checkGeoY(int geoY) {
+		if ((geoY < 0) || (geoY >= GEO_CELLS_Y)) {
 			throw new IllegalArgumentException();
 		}
 	}
 	
-	private IRegion getRegion(int geoX, int geoY)
-	{
+	private IRegion getRegion(int geoX, int geoY) {
 		checkGeoX(geoX);
 		checkGeoY(geoY);
 		return _regions.get(((geoX / IRegion.REGION_CELLS_X) * GEO_REGIONS_Y) + (geoY / IRegion.REGION_CELLS_Y));
 	}
 	
-	public void loadRegion(Path filePath, int regionX, int regionY) throws IOException
-	{
+	public void loadRegion(Path filePath, int regionX, int regionY) throws IOException {
 		final int regionOffset = (regionX * GEO_REGIONS_Y) + regionY;
 		
-		try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r"))
-		{
+		try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
 			_regions.set(regionOffset, new Region(raf.getChannel().map(MapMode.READ_ONLY, 0, raf.length()).order(ByteOrder.LITTLE_ENDIAN)));
 		}
 	}
 	
-	public void unloadRegion(int regionX, int regionY)
-	{
+	public void unloadRegion(int regionX, int regionY) {
 		_regions.set((regionX * GEO_REGIONS_Y) + regionY, NullRegion.INSTANCE);
 	}
 	
-	public boolean hasGeoPos(int geoX, int geoY)
-	{
+	public boolean hasGeoPos(int geoX, int geoY) {
 		return getRegion(geoX, geoY).hasGeo();
 	}
 	
-	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe)
-	{
+	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe) {
 		return getRegion(geoX, geoY).checkNearestNswe(geoX, geoY, worldZ, nswe);
 	}
 	
-	public int getNearestZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNearestZ(int geoX, int geoY, int worldZ) {
 		return getRegion(geoX, geoY).getNearestZ(geoX, geoY, worldZ);
 	}
 	
-	public int getNextLowerZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNextLowerZ(int geoX, int geoY, int worldZ) {
 		return getRegion(geoX, geoY).getNextLowerZ(geoX, geoY, worldZ);
 	}
 	
-	public int getNextHigherZ(int geoX, int geoY, int worldZ)
-	{
+	public int getNextHigherZ(int geoX, int geoY, int worldZ) {
 		return getRegion(geoX, geoY).getNextHigherZ(geoX, geoY, worldZ);
 	}
 	
-	public int getGeoX(int worldX)
-	{
-		if ((worldX < WORLD_MIN_X) || (worldX > WORLD_MAX_X))
-		{
+	public int getGeoX(int worldX) {
+		if ((worldX < WORLD_MIN_X) || (worldX > WORLD_MAX_X)) {
 			throw new IllegalArgumentException();
 		}
 		return (worldX - WORLD_MIN_X) / 16;
 	}
 	
-	public int getGeoY(int worldY)
-	{
-		if ((worldY < WORLD_MIN_Y) || (worldY > WORLD_MAX_Y))
-		{
+	public int getGeoY(int worldY) {
+		if ((worldY < WORLD_MIN_Y) || (worldY > WORLD_MAX_Y)) {
 			throw new IllegalArgumentException();
 		}
 		return (worldY - WORLD_MIN_Y) / 16;
 	}
 	
-	public int getWorldX(int geoX)
-	{
+	public int getWorldX(int geoX) {
 		checkGeoX(geoX);
 		return (geoX * 16) + WORLD_MIN_X + 8;
 	}
 	
-	public int getWorldY(int geoY)
-	{
+	public int getWorldY(int geoY) {
 		checkGeoY(geoY);
 		return (geoY * 16) + WORLD_MIN_Y + 8;
 	}
