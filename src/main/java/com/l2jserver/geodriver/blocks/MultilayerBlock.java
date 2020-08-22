@@ -20,12 +20,13 @@ package com.l2jserver.geodriver.blocks;
 
 import java.nio.ByteBuffer;
 
-import com.l2jserver.geodriver.IBlock;
+import com.l2jserver.geodriver.Block;
 
 /**
+ * Multilayer block implementation.
  * @author HorridoJoho
  */
-public class MultilayerBlock implements IBlock {
+public class MultilayerBlock implements Block {
 	
 	private final byte[] _data;
 	
@@ -36,7 +37,7 @@ public class MultilayerBlock implements IBlock {
 	public MultilayerBlock(ByteBuffer bb) {
 		int start = bb.position();
 		
-		for (int blockCellOffset = 0; blockCellOffset < IBlock.BLOCK_CELLS; blockCellOffset++) {
+		for (int blockCellOffset = 0; blockCellOffset < Block.BLOCK_CELLS; blockCellOffset++) {
 			byte nLayers = bb.get();
 			if ((nLayers <= 0) || (nLayers > 125)) {
 				throw new RuntimeException("L2JGeoDriver: Geo file corrupted! Invalid layers count!");
@@ -77,7 +78,7 @@ public class MultilayerBlock implements IBlock {
 	}
 	
 	private int _getCellDataOffset(int geoX, int geoY) {
-		int cellLocalOffset = ((geoX % IBlock.BLOCK_CELLS_X) * IBlock.BLOCK_CELLS_Y) + (geoY % IBlock.BLOCK_CELLS_Y);
+		int cellLocalOffset = ((geoX % Block.BLOCK_CELLS_X) * Block.BLOCK_CELLS_Y) + (geoY % Block.BLOCK_CELLS_Y);
 		int cellDataOffset = 0;
 		// move index to cell, we need to parse on each request, OR we parse on creation and save indexes
 		for (int i = 0; i < cellLocalOffset; i++) {

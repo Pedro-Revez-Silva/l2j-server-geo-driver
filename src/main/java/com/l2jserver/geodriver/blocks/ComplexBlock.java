@@ -20,24 +20,25 @@ package com.l2jserver.geodriver.blocks;
 
 import java.nio.ByteBuffer;
 
-import com.l2jserver.geodriver.IBlock;
+import com.l2jserver.geodriver.Block;
 
 /**
+ * Complex block implementation.
  * @author HorridoJoho
  */
-public final class ComplexBlock implements IBlock {
+public final class ComplexBlock implements Block {
 	
 	private final short[] _data;
 	
 	public ComplexBlock(ByteBuffer bb) {
-		_data = new short[IBlock.BLOCK_CELLS];
-		for (int cellOffset = 0; cellOffset < IBlock.BLOCK_CELLS; cellOffset++) {
+		_data = new short[Block.BLOCK_CELLS];
+		for (int cellOffset = 0; cellOffset < Block.BLOCK_CELLS; cellOffset++) {
 			_data[cellOffset] = bb.getShort();
 		}
 	}
 	
 	private short _getCellData(int geoX, int geoY) {
-		return _data[((geoX % IBlock.BLOCK_CELLS_X) * IBlock.BLOCK_CELLS_Y) + (geoY % IBlock.BLOCK_CELLS_Y)];
+		return _data[((geoX % Block.BLOCK_CELLS_X) * Block.BLOCK_CELLS_Y) + (geoY % Block.BLOCK_CELLS_Y)];
 	}
 	
 	private byte _getCellNSWE(int geoX, int geoY) {
@@ -62,12 +63,12 @@ public final class ComplexBlock implements IBlock {
 	@Override
 	public int getNextLowerZ(int geoX, int geoY, int worldZ) {
 		int cellHeight = _getCellHeight(geoX, geoY);
-		return cellHeight <= worldZ ? cellHeight : worldZ;
+		return Math.min(cellHeight, worldZ);
 	}
 	
 	@Override
 	public int getNextHigherZ(int geoX, int geoY, int worldZ) {
 		int cellHeight = _getCellHeight(geoX, geoY);
-		return cellHeight >= worldZ ? cellHeight : worldZ;
+		return Math.max(cellHeight, worldZ);
 	}
 }

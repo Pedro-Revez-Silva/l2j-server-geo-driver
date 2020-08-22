@@ -20,12 +20,13 @@ package com.l2jserver.geodriver.blocks;
 
 import java.nio.ByteBuffer;
 
-import com.l2jserver.geodriver.IBlock;
+import com.l2jserver.geodriver.Block;
 
 /**
+ * Flat block implementation.
  * @author HorridoJoho
  */
-public class FlatBlock implements IBlock {
+public class FlatBlock implements Block {
 	
 	private final short _height;
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 L2J Server
+ * Copyright © 2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -26,9 +26,10 @@ import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 import com.l2jserver.geodriver.regions.NullRegion;
-import com.l2jserver.geodriver.regions.Region;
+import com.l2jserver.geodriver.regions.NormalRegion;
 
 /**
+ * Geo driver.
  * @author HorridoJoho
  */
 public final class GeoDriver {
@@ -47,19 +48,19 @@ public final class GeoDriver {
 	public static final int GEO_REGIONS = GEO_REGIONS_X * GEO_REGIONS_Y;
 	
 	/** Blocks in the world on the x axis */
-	public static final int GEO_BLOCKS_X = GEO_REGIONS_X * IRegion.REGION_BLOCKS_X;
+	public static final int GEO_BLOCKS_X = GEO_REGIONS_X * NormalRegion.REGION_BLOCKS_X;
 	/** Blocks in the world on the y axis */
-	public static final int GEO_BLOCKS_Y = GEO_REGIONS_Y * IRegion.REGION_BLOCKS_Y;
+	public static final int GEO_BLOCKS_Y = GEO_REGIONS_Y * NormalRegion.REGION_BLOCKS_Y;
 	/** Blocks in the world */
-	public static final int GEO_BLOCKS = GEO_REGIONS * IRegion.REGION_BLOCKS;
+	public static final int GEO_BLOCKS = GEO_REGIONS * NormalRegion.REGION_BLOCKS;
 	
 	/** Cells in the world on the x axis */
-	public static final int GEO_CELLS_X = GEO_BLOCKS_X * IBlock.BLOCK_CELLS_X;
+	public static final int GEO_CELLS_X = GEO_BLOCKS_X * Block.BLOCK_CELLS_X;
 	/** Cells in the world in the y axis */
-	public static final int GEO_CELLS_Y = GEO_BLOCKS_Y * IBlock.BLOCK_CELLS_Y;
+	public static final int GEO_CELLS_Y = GEO_BLOCKS_Y * Block.BLOCK_CELLS_Y;
 	
 	/** The regions array */
-	private final AtomicReferenceArray<IRegion> _regions = new AtomicReferenceArray<>(GEO_REGIONS);
+	private final AtomicReferenceArray<Region> _regions = new AtomicReferenceArray<>(GEO_REGIONS);
 	
 	public GeoDriver() {
 		for (int i = 0; i < _regions.length(); i++) {
@@ -79,17 +80,17 @@ public final class GeoDriver {
 		}
 	}
 	
-	private IRegion getRegion(int geoX, int geoY) {
+	private Region getRegion(int geoX, int geoY) {
 		checkGeoX(geoX);
 		checkGeoY(geoY);
-		return _regions.get(((geoX / IRegion.REGION_CELLS_X) * GEO_REGIONS_Y) + (geoY / IRegion.REGION_CELLS_Y));
+		return _regions.get(((geoX / Region.REGION_CELLS_X) * GEO_REGIONS_Y) + (geoY / Region.REGION_CELLS_Y));
 	}
 	
 	public void loadRegion(Path filePath, int regionX, int regionY) throws IOException {
 		final int regionOffset = (regionX * GEO_REGIONS_Y) + regionY;
 		
 		try (RandomAccessFile raf = new RandomAccessFile(filePath.toFile(), "r")) {
-			_regions.set(regionOffset, new Region(raf.getChannel().map(MapMode.READ_ONLY, 0, raf.length()).order(ByteOrder.LITTLE_ENDIAN)));
+			_regions.set(regionOffset, new NormalRegion(raf.getChannel().map(MapMode.READ_ONLY, 0, raf.length()).order(ByteOrder.LITTLE_ENDIAN)));
 		}
 	}
 	

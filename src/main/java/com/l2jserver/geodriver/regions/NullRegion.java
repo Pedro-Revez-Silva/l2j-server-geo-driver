@@ -18,12 +18,13 @@
  */
 package com.l2jserver.geodriver.regions;
 
-import com.l2jserver.geodriver.IRegion;
+import com.l2jserver.geodriver.Region;
 
 /**
+ * Null region implementation.
  * @author HorridoJoho
  */
-public final class NullRegion implements IRegion {
+public final class NullRegion implements Region {
 	public static final NullRegion INSTANCE = new NullRegion();
 	
 	@Override

@@ -18,42 +18,51 @@
  */
 package com.l2jserver.geodriver.regions;
 
+import static com.l2jserver.geodriver.Block.TYPE_COMPLEX;
+import static com.l2jserver.geodriver.Block.TYPE_FLAT;
+import static com.l2jserver.geodriver.Block.TYPE_MULTILAYER;
+
 import java.nio.ByteBuffer;
 
-import com.l2jserver.geodriver.IBlock;
-import com.l2jserver.geodriver.IRegion;
+import com.l2jserver.geodriver.Block;
+import com.l2jserver.geodriver.Region;
 import com.l2jserver.geodriver.blocks.ComplexBlock;
 import com.l2jserver.geodriver.blocks.FlatBlock;
 import com.l2jserver.geodriver.blocks.MultilayerBlock;
 
 /**
+ * Normal region implementation.
  * @author HorridoJoho
  */
-public final class Region implements IRegion {
+public final class NormalRegion implements Region {
 	
-	private final IBlock[] _blocks = new IBlock[IRegion.REGION_BLOCKS];
+	private final Block[] _blocks = new Block[Region.REGION_BLOCKS];
 	
-	public Region(ByteBuffer bb) {
-		for (int blockOffset = 0; blockOffset < IRegion.REGION_BLOCKS; blockOffset++) {
+	public NormalRegion(ByteBuffer bb) {
+		for (int blockOffset = 0; blockOffset < Region.REGION_BLOCKS; blockOffset++) {
 			int blockType = bb.get();
 			switch (blockType) {
-				case IBlock.TYPE_FLAT:
+				case TYPE_FLAT: {
 					_blocks[blockOffset] = new FlatBlock(bb);
 					break;
-				case IBlock.TYPE_COMPLEX:
+				}
+				case TYPE_COMPLEX: {
 					_blocks[blockOffset] = new ComplexBlock(bb);
 					break;
-				case IBlock.TYPE_MULTILAYER:
+				}
+				case TYPE_MULTILAYER: {
 					_blocks[blockOffset] = new MultilayerBlock(bb);
 					break;
-				default:
+				}
+				default: {
 					throw new RuntimeException("Invalid block type " + blockType + "!");
+				}
 			}
 		}
 	}
 	
-	private IBlock getBlock(int geoX, int geoY) {
-		return _blocks[(((geoX / IBlock.BLOCK_CELLS_X) % IRegion.REGION_BLOCKS_X) * IRegion.REGION_BLOCKS_Y) + ((geoY / IBlock.BLOCK_CELLS_Y) % IRegion.REGION_BLOCKS_Y)];
+	private Block getBlock(int geoX, int geoY) {
+		return _blocks[(((geoX / Block.BLOCK_CELLS_X) % Region.REGION_BLOCKS_X) * Region.REGION_BLOCKS_Y) + ((geoY / Block.BLOCK_CELLS_Y) % Region.REGION_BLOCKS_Y)];
 	}
 	
 	@Override

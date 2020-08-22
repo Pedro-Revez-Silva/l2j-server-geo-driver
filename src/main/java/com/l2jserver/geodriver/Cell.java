@@ -1,5 +1,5 @@
 /*
- * Copyright © 2019 L2J Server
+ * Copyright © 2020 L2J Server
  * 
  * This file is part of L2J Server.
  * 
@@ -19,6 +19,7 @@
 package com.l2jserver.geodriver;
 
 /**
+ * Cell.
  * @author HorridoJoho
  */
 public final class Cell {
